@@ -2384,6 +2384,9 @@ pub(crate) fn create_reqwest_client(
         .gzip(!configuration.no_gzip)
         // Validate https certificates unless `--accept-invalid-certs` is enabled.
         .danger_accept_invalid_certs(configuration.accept_invalid_certs)
+        // HACK: allow many idle connections per host, so that there isn't connection churn when sharing
+        // the client between many GooseUsers.
+        .pool_max_idle_per_host(500_000)
         .build()
 }
 
